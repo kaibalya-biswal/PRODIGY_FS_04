@@ -1,0 +1,225 @@
+.user-presence {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.user-presence:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-presence.small {
+  gap: 4px;
+  padding: 2px 4px;
+}
+
+.user-presence.large {
+  gap: 12px;
+  padding: 8px 12px;
+}
+
+.user-avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-presence.small .user-avatar img {
+  width: 24px;
+  height: 24px;
+}
+
+.user-presence.large .user-avatar img {
+  width: 40px;
+  height: 40px;
+}
+
+.avatar-placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.user-presence.small .avatar-placeholder {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+.user-presence.large .avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #1a1a1a;
+  transition: all 0.3s ease;
+}
+
+.user-presence.small .status-indicator {
+  width: 8px;
+  height: 8px;
+  border-width: 1.5px;
+}
+
+.user-presence.large .status-indicator {
+  width: 14px;
+  height: 14px;
+  border-width: 2.5px;
+}
+
+.status-indicator.online {
+  background-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+}
+
+.status-indicator.away {
+  background-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+}
+
+.status-indicator.busy {
+  background-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+.status-indicator.offline {
+  background-color: #6b7280;
+  box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.3);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.username {
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-presence.small .username {
+  font-size: 12px;
+}
+
+.user-presence.large .username {
+  font-size: 16px;
+}
+
+.status-text {
+  font-size: 12px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.user-presence.small .status-text {
+  font-size: 10px;
+}
+
+.user-presence.large .status-text {
+  font-size: 14px;
+}
+
+.status-text.online {
+  color: #10b981;
+}
+
+.status-text.away {
+  color: #f59e0b;
+}
+
+.status-text.busy {
+  color: #ef4444;
+}
+
+.status-text.offline {
+  color: #6b7280;
+}
+
+.typing-indicator {
+  color: #10b981;
+  animation: typing-pulse 1.5s infinite;
+}
+
+@keyframes typing-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.last-seen {
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.user-presence.small .last-seen {
+  font-size: 10px;
+}
+
+.user-presence.large .last-seen {
+  font-size: 12px;
+}
+
+/* Online users list styles */
+.online-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+}
+
+.online-users-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.online-count {
+  background-color: #10b981;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 8px;
+} 

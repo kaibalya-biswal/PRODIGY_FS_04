@@ -1,5 +1,6 @@
 import React from 'react';
 import { format } from 'date-fns';
+import UserPresence from './UserPresence';
 import './Message.css';
 
 const Message = ({ message, currentUser }) => {
@@ -11,9 +12,10 @@ const Message = ({ message, currentUser }) => {
       <div className="message-content">
         {!isOwnMessage && (
           <div className="message-avatar">
-            <img 
-              src={message.users?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${message.users?.username || 'user'}`}
-              alt={message.users?.username || 'User'}
+            <UserPresence 
+              user={message.users} 
+              size="small" 
+              showStatus={false}
             />
           </div>
         )}

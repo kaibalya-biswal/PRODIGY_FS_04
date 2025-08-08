@@ -88,4 +88,47 @@ export const getRooms = async () => {
     .order('created_at', { ascending: false })
   
   return { data, error }
+}
+
+// User Presence Functions
+export const updateUserPresence = async (presenceData) => {
+  const { data, error } = await supabase
+    .from('user_presence')
+    .upsert([presenceData])
+    .select()
+  
+  return { data, error }
+}
+
+export const getUserPresence = async (userId) => {
+  const { data, error } = await supabase
+    .from('user_presence')
+    .select('*')
+    .eq('id', userId)
+    .single()
+  
+  return { data, error }
+}
+
+export const getAllUserPresence = async () => {
+  const { data, error } = await supabase
+    .from('user_presence')
+    .select('*, users(username, avatar_url)')
+    .order('updated_at', { ascending: false })
+  
+  return { data, error }
+}
+
+export const updateTypingStatus = async (userId, isTyping, roomId = null) => {
+  const { data, error } = await supabase
+    .from('user_presence')
+    .update({ 
+      is_typing: isTyping, 
+      current_room: roomId,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', userId)
+    .select()
+  
+  return { data, error }
 } 

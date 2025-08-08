@@ -280,6 +280,36 @@
   transform: scale(1.05);
 }
 
+/* Typing indicators */
+.typing-indicators {
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.typing-indicator:last-child {
+  margin-bottom: 0;
+}
+
+.typing-dot {
+  color: #10b981;
+  animation: typing-pulse 1.5s infinite;
+  font-size: 14px;
+}
+
+.typing-text {
+  font-style: italic;
+}
+
 .no-room-selected {
   flex: 1;
   display: flex;

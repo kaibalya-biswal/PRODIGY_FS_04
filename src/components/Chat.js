@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useChat } from '../contexts/ChatContext';
+import { usePresence } from '../contexts/PresenceContext';
 import { LogOut, Send, Plus, Users, MessageSquare } from 'lucide-react';
 import Message from './Message';
 import CreateRoomModal from './CreateRoomModal';
+import UserPresence from './UserPresence';
 import './Chat.css';
 
 const Chat = () => {
@@ -17,11 +19,13 @@ const Chat = () => {
     sendMessage, 
     joinRoom 
   } = useChat();
+  const { onlineUsers, getCurrentRoomUsers, setTyping, isUserTyping, updatePresence } = usePresence();
   
   const [message, setMessage] = useState('');
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [activeTab, setActiveTab] = useState('rooms'); // 'rooms' or 'users'
   const messagesEndRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -35,9 +39,40 @@ const Chat = () => {
     e.preventDefault();
     if (!message.trim() || !currentRoom) return;
 
+    console.log('Sending message:', { message, currentRoom, user });
+
+    // Stop typing indicator
+    setTyping(false, currentRoom);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
     const { error } = await sendMessage(message, currentRoom);
     if (!error) {
       setMessage('');
+      console.log('Message sent successfully');
+    } else {
+      console.error('Failed to send message:', error);
+      alert(`Failed to send message: ${error.message || 'Unknown error'}`);
+    }
+  };
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+    
+    // Start typing indicator
+    if (currentRoom) {
+      setTyping(true, currentRoom);
+      
+      // Clear existing timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      
+      // Stop typing indicator after 3 seconds of inactivity
+      typingTimeoutRef.current = setTimeout(() => {
+        setTyping(false, currentRoom);
+      }, 3000);
     }
   };
 
@@ -101,7 +136,10 @@ const Chat = () => {
                   <div
                     key={room.id}
                     className={`room-item ${currentRoom === room.id ? 'active' : ''}`}
-                    onClick={() => joinRoom(room.id)}
+                    onClick={() => {
+                      joinRoom(room.id);
+                      updatePresence('online', room.id);
+                    }}
                   >
                     <div className="room-info">
                       <h4>{room.name}</h4>
@@ -117,17 +155,19 @@ const Chat = () => {
           ) : (
             <>
               <div className="section-header">
-                <h3>Online Users</h3>
+                <h3>
+                  Online Users 
+                  <span className="online-count">{onlineUsers.size}</span>
+                </h3>
               </div>
               <div className="users-list">
                 {users.map(userItem => (
                   <div key={userItem.id} className="user-item">
-                    <img 
-                      src={userItem.avatar_url} 
-                      alt={userItem.username}
-                      className="user-avatar-small"
+                    <UserPresence 
+                      user={userItem} 
+                      size="small" 
+                      showLastSeen={true}
                     />
-                    <span>{userItem.username}</span>
                   </div>
                 ))}
                 {users.length === 0 && (
@@ -168,7 +208,7 @@ const Chat = () => {
               <input
                 type="text"
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={handleMessageChange}
                 placeholder="Type your message..."
                 className="message-input"
               />
@@ -176,6 +216,24 @@ const Chat = () => {
                 <Send size={20} />
               </button>
             </form>
+            
+            {/* Typing indicators */}
+            {currentRoom && (
+              <div className="typing-indicators">
+                {users
+                  .filter(userItem => 
+                    userItem.id !== user.id && 
+                    isUserTyping(userItem.id) &&
+                    getCurrentRoomUsers(currentRoom).some(presence => presence.id === userItem.id)
+                  )
+                  .map(userItem => (
+                    <div key={userItem.id} className="typing-indicator">
+                      <span className="typing-dot">●</span>
+                      <span className="typing-text">{userItem.username} is typing...</span>
+                    </div>
+                  ))}
+              </div>
+            )}
           </>
         ) : (
           <div className="no-room-selected">
